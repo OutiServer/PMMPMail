@@ -1,0 +1,13 @@
+{
+  "name": "ken_cir/mail",
+  "description": "",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "": "src/"
+    }
+  },
+  "require-dev": {
+    "pocketmine/pocketmine-mp": "4.3.1"
+  }
+}
