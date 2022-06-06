@@ -11,4 +11,6 @@ projects:
       - src: CortexPE/Commando/Commando
         version: ^3.0.0
         branch: PM4
+      - src: KenCir/FormAPI/libFormAPI
+        version: ^2.1.0
 ...
