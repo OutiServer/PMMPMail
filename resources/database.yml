@@ -1,0 +1,9 @@
+# データベースConfigのバージョン
+version: 1.0.0
+
+# データベースの設定
+database:
+  type: sqlite
+  sqlite:
+    file: mail.db
+  worker-limit: 1

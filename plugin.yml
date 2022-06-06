@@ -2,3 +2,11 @@ name: Mail
 version: 1.0.0
 api: 4.0.0
 main: Ken_Cir\Mail\Mail
+
+permissions:
+  mail.command:
+    description: Mail Command Permission
+    default: true
+  mail.command.create:
+    description: Create SubCommand Permission
+    default: true
