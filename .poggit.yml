@@ -1,9 +1,9 @@
---- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/OutiServer/PMMPMail
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/OutiServer/Mail
 build-by-default: true
 branches:
 - master
 projects:
-  PMMPMail:
+  Mail:
     path: ""
     lint:
       phpstan: false
