@@ -45,6 +45,21 @@ class MailDataManager extends BaseDataManager
         return $this->data[$id];
     }
 
+    /**
+     * @param string $xuid
+     * @param bool $keyValue
+     * @return MailData[]
+     */
+    public function getPlayerXuid(string $xuid, bool $keyValue): array
+    {
+        $mail = array_filter($this->data, function (MailData $mailData) use ($xuid) {
+            return $mailData->getSendXuid() === $xuid;
+        });
+
+        if ($keyValue) return array_values($mail);
+        return array_reverse($mail, true);
+    }
+
     public function create(string $title, string $content, string $sendXuid, string $authorXuid, int $sendTime): MailData
     {
         $this->dataConnector->executeInsert("economy.mail.mails.create",
@@ -61,9 +76,26 @@ class MailDataManager extends BaseDataManager
 
     public function delete(int $id): void
     {
+        if (!$this->get($id)) return;
+
         $this->dataConnector->executeGeneric("economy.mail.mails.delete",
         [
             "id" => $id
         ]);
+        unset($this->data[$id]);
+    }
+
+    /**
+     * @param string $xuid
+     * @return int
+     */
+    public function unReadCount(string $xuid): int
+    {
+        $unReadCount = 0;
+        foreach ($this->getPlayerXuid($xuid, false) as $data) {
+            if (!$data->getRead()) $unReadCount++;
+        }
+
+        return $unReadCount;
     }
 }

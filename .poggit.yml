@@ -5,12 +5,13 @@ branches:
 projects:
   PMMPMail:
     path: ""
+    lint:
+      phpstan: false
     libs:
       - src: poggit/libasynql/libasynql
         version: ^4.0.1
-      - src: CortexPE/Commando/Commando
-        version: ^3.0.0
-        branch: PM4
+      - src: KenCir/Commando/Commando
+        version: ^3.1.0
       - src: KenCir/FormAPI/libFormAPI
         version: ^2.1.0
 ...

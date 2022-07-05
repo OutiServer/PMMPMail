@@ -1,0 +1,4 @@
+version: 1.0.0
+
+# プレイヤーが参加した時に未読メール数を通知するか
+player_join_notify: true

@@ -2,15 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Ken_Cir\Mail\Form;
+namespace Ken_Cir\Mail\Forms;
 
 use DateTime;
-use jojoe77777\FormAPI\CustomForm;
 use Ken_Cir\EconomyCore\Database\Player\PlayerData;
 use Ken_Cir\EconomyCore\Database\Player\PlayerDataManager;
 use Ken_Cir\EconomyCore\Forms\Base\BaseForm;
 use Ken_Cir\EconomyCore\Utils\FormUtil;
+use Ken_Cir\LibFormAPI\FormContents\CustomForm\ContentInput;
+use Ken_Cir\LibFormAPI\FormContents\CustomForm\ContentToggle;
+use Ken_Cir\LibFormAPI\Forms\CustomForm;
 use Ken_Cir\Mail\Database\Mail\MailDataManager;
+use Ken_Cir\Mail\Mail;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
@@ -19,10 +22,25 @@ class CreateMailForm implements BaseForm
 {
     public function execute(Player $player): void
     {
-        $form = new CustomForm(function (Player $player, $data) {
+        $formContent = [
+            new ContentInput("メールタイトル", "mailTitle"),
+            new ContentInput("メール内容", "mailContent"),
+            new ContentInput("送信相手", "sendToPlayerName"),
+        ];
+
+        if (Server::getInstance()->isOp($player->getName())) {
+            $formContent[] = new ContentToggle(TextFormat::RED . "[運営専用] " . TextFormat::WHITE . "運営名義でメールを作成する");
+            $formContent[] = new ContentToggle(TextFormat::RED . "[運営専用] " . TextFormat::WHITE . "メールをプレイヤー全員に送信する");
+        }
+
+        $form = new CustomForm($player,
+        "[Mail] メールの新規作成",
+        $formContent,
+        function (Player $player, array $data): void {
             if (!$data[0] and !$data[1] and !$data[2]) {
                 $player->sendMessage(TextFormat::RED . "メールタイトル・メール内容・送信相手は入力必須項目です");
-                FormUtil::backForm([$this, "execute"], [$player]);
+                $player->sendMessage(TextFormat::GREEN . "3秒後前のフォームに戻ります");
+                FormUtil::backForm([Mail::getInstance()->getStackFormManager()->getStackFormEnd($player->getXuid()), "reSend"], [$player], 3);
                 return;
             }
 
@@ -45,25 +63,33 @@ class CreateMailForm implements BaseForm
             else {
                 $sendToPlayerData = PlayerDataManager::getInstance()->getName($data[2]);
                 if (!$sendToPlayerData) {
-                    $player->sendMessage(TextFormat::RED . "プレイヤー名: $data[2]のデータは存在しません");
+                    (new PlayerSelectorForm())->execute($player,
+                    $data[2],
+                    function (Player $player, PlayerData $playerData) use ($sendToPlayerData, $data): void {
+                        $time = new DateTime('now');
+                        MailDataManager::getInstance()->create($data[0],
+                            $data[1],
+                            $playerData->getXuid(),
+                            $data[3] ? "運営" : $player->getXuid(),
+                            $time->getTimestamp());
+                        $player->sendMessage(TextFormat::GREEN . "{$sendToPlayerData->getName()}にメールを送信しました");
+                    });
                     return;
                 }
 
                 MailDataManager::getInstance()->create($data[0],
-                $data[1],
-                $sendToPlayerData->getXuid(),
-                $data[3] ? "運営" : $player->getXuid(),
+                    $data[1],
+                    $sendToPlayerData->getXuid(),
+                    $data[3] ? "運営" : $player->getXuid(),
                     $time->getTimestamp());
+                $player->sendMessage(TextFormat::GREEN . "{$sendToPlayerData->getName()}にメールを送信しました");
             }
+        },
+        function (Player $player): void {
+            Mail::getInstance()->getStackFormManager()->deleteStackForm($player->getXuid(), "create_form");
+            Mail::getInstance()->getStackFormManager()->getStackFormEnd($player->getXuid())?->reSend();
         });
-        $form->setTitle("[Economy Mail] メールの新規作成");
-        $form->addInput("メールタイトル", "mailTitle");
-        $form->addInput("メール内容", "mailContent");
-        $form->addInput("送信相手", "sendToPlayerName");
-        if (Server::getInstance()->isOp($player->getName())) {
-            $form->addToggle(TextFormat::RED . "[運営専用] " . TextFormat::WHITE . "運営名義でメールを作成する");
-            $form->addToggle(TextFormat::RED . "[運営専用] " . TextFormat::WHITE . "メールをプレイヤー全員に送信する");
-        }
-        $player->sendForm($form);
+
+        Mail::getInstance()->getStackFormManager()->addStackForm($player->getXuid(), "create_mail", $form);
     }
 }

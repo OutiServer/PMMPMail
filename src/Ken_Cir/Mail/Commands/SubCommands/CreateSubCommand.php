@@ -8,7 +8,7 @@ use CortexPE\Commando\args\RawStringArgument;
 use CortexPE\Commando\BaseSubCommand;
 use Ken_Cir\EconomyCore\Database\Player\PlayerDataManager;
 use Ken_Cir\Mail\Database\Mail\MailDataManager;
-use Ken_Cir\Mail\Form\CreateMailForm;
+use Ken_Cir\Mail\Forms\CreateMailForm;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
@@ -18,9 +18,9 @@ class CreateSubCommand extends BaseSubCommand
     protected function prepare(): void
     {
         $this->setPermission("mail.command.create");
-        $this->registerArgument(0, new RawStringArgument("sendPlayerName", false));
-        $this->registerArgument(1, new RawStringArgument("title", false));
-        $this->registerArgument(2, new RawStringArgument("content", false));
+        $this->registerArgument(0, new RawStringArgument("sendPlayerName", true));
+        $this->registerArgument(1, new RawStringArgument("title", true));
+        $this->registerArgument(2, new RawStringArgument("content", true));
     }
 
     public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
