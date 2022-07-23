@@ -2,7 +2,8 @@ name: Mail
 description: Mail Plugin
 version: 1.0.0
 api: 4.0.0
-main: Ken_Cir\Mail\Mail
+main: outiserver\mail\Mail
+src-namespace-prefix: outiserver\mail
 
 permissions:
   mail.command:

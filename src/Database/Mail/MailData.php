@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ken_Cir\Mail\Database\Mail;
+namespace outiserver\mail\Database\Mail;
 
-use Ken_Cir\EconomyCore\Database\Base\BaseData;
+use outiserver\economycore\Database\Base\BaseData;
 use poggit\libasynql\DataConnector;
 
 class MailData extends BaseData

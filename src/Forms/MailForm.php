@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Ken_Cir\Mail\Forms;
+namespace outiserver\mail\Forms;
 
-use Ken_Cir\EconomyCore\Forms\Base\BaseForm;
+use outiserver\economycore\Forms\Base\BaseForm;
 use Ken_Cir\LibFormAPI\FormContents\SimpleForm\SimpleFormButton;
 use Ken_Cir\LibFormAPI\Forms\SimpleForm;
-use Ken_Cir\Mail\Mail;
+use outiserver\mail\Mail;
 use pocketmine\player\Player;
 
 class MailForm implements BaseForm
 {
     public function execute(Player $player): void
     {
-        $form = new SimpleForm($player,
+        $form = new SimpleForm(Mail::getInstance(),
+            $player,
         "[Mail] メール",
         "",
         [

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Ken_Cir\Mail\Commands;
+namespace outiserver\mail\Commands;
 
 use CortexPE\Commando\BaseCommand;
-use Ken_Cir\Mail\Commands\SubCommands\CreateSubCommand;
-use Ken_Cir\Mail\Commands\SubCommands\FormSubCommand;
-use Ken_Cir\Mail\Commands\SubCommands\ViewSubCommand;
+use outiserver\mail\Commands\SubCommands\CreateSubCommand;
+use outiserver\mail\Commands\SubCommands\FormSubCommand;
+use outiserver\mail\Commands\SubCommands\ViewSubCommand;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ken_Cir\Mail\Handlers;
+namespace outiserver\mail\Handlers;
 
-use Ken_Cir\Mail\Database\Mail\MailDataManager;
-use Ken_Cir\Mail\Mail;
+use outiserver\mail\Database\Mail\MailDataManager;
+use outiserver\mail\Mail;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;

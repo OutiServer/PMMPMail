@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Ken_Cir\Mail\Forms;
+namespace outiserver\mail\Forms;
 
 use DateTime;
-use Ken_Cir\EconomyCore\Database\Player\PlayerData;
-use Ken_Cir\EconomyCore\Database\Player\PlayerDataManager;
-use Ken_Cir\EconomyCore\Forms\Base\BaseForm;
-use Ken_Cir\EconomyCore\Utils\FormUtil;
+use outiserver\economycore\Database\Player\PlayerData;
+use outiserver\economycore\Database\Player\PlayerDataManager;
+use outiserver\economycore\Forms\Base\BaseForm;
+use outiserver\economycore\Utils\FormUtil;
 use Ken_Cir\LibFormAPI\FormContents\CustomForm\ContentInput;
 use Ken_Cir\LibFormAPI\FormContents\CustomForm\ContentToggle;
 use Ken_Cir\LibFormAPI\Forms\CustomForm;
-use Ken_Cir\Mail\Database\Mail\MailDataManager;
-use Ken_Cir\Mail\Mail;
+use outiserver\mail\Database\Mail\MailDataManager;
+use outiserver\mail\Mail;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
@@ -33,7 +33,8 @@ class CreateMailForm implements BaseForm
             $formContent[] = new ContentToggle(TextFormat::RED . "[運営専用] " . TextFormat::WHITE . "メールをプレイヤー全員に送信する");
         }
 
-        $form = new CustomForm($player,
+        $form = new CustomForm(Mail::getInstance(),
+            $player,
         "[Mail] メールの新規作成",
         $formContent,
         function (Player $player, array $data): void {

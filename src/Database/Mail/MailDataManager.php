@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ken_Cir\Mail\Database\Mail;
+namespace outiserver\mail\Database\Mail;
 
-use Ken_Cir\EconomyCore\Database\Base\BaseAutoincrement;
-use Ken_Cir\EconomyCore\Database\Base\BaseDataManager;
+use outiserver\economycore\Database\Base\BaseAutoincrement;
+use outiserver\economycore\Database\Base\BaseDataManager;
 use pocketmine\utils\SingletonTrait;
 use poggit\libasynql\DataConnector;
 

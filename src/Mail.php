@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Ken_Cir\Mail;
+namespace outiserver\mail;
 
-use Ken_Cir\EconomyCore\EconomyCore;
+use outiserver\economycore\EconomyCore;
 use Ken_Cir\LibFormAPI\FormStack\StackFormManager;
-use Ken_Cir\Mail\Commands\MailCommand;
-use Ken_Cir\Mail\Database\Mail\MailDataManager;
-use Ken_Cir\Mail\Handlers\EventHandler;
+use outiserver\mail\Commands\MailCommand;
+use outiserver\mail\Database\Mail\MailDataManager;
+use outiserver\mail\Handlers\EventHandler;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;

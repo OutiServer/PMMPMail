@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Ken_Cir\Mail\Forms;
+namespace outiserver\mail\Forms;
 
-use Ken_Cir\EconomyCore\Database\Player\PlayerDataManager;
+use outiserver\economycore\Database\Player\PlayerDataManager;
 use Ken_Cir\LibFormAPI\FormContents\SimpleForm\SimpleFormButton;
 use Ken_Cir\LibFormAPI\Forms\SimpleForm;
 use Ken_Cir\LibFormAPI\Utils\FormUtil;
-use Ken_Cir\Mail\Mail;
+use outiserver\mail\Mail;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
@@ -35,7 +35,8 @@ class PlayerSelectorForm
                 $formContent[] = new SimpleFormButton($playerData->getName());
             }
 
-            new SimpleForm($player,
+            new SimpleForm(Mail::getInstance(),
+                $player,
                 "[PlayerSelector] プレイヤーを選択",
                 "該当するプレイヤーが見つかりました、以下から選択してください",
                 $formContent,

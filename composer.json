@@ -1,10 +1,10 @@
 {
-  "name": "ken_cir/mail",
+  "name": "outiserver/mail",
   "description": "",
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "": "src/"
+      "outiserver\\mail\\": "src/"
     }
   },
   "require-dev": {

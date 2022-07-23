@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Ken_Cir\Mail\Commands\SubCommands;
+namespace outiserver\mail\Commands\SubCommands;
 
 use CortexPE\Commando\args\RawStringArgument;
 use CortexPE\Commando\BaseSubCommand;
-use Ken_Cir\EconomyCore\Database\Player\PlayerDataManager;
-use Ken_Cir\Mail\Database\Mail\MailDataManager;
-use Ken_Cir\Mail\Forms\CreateMailForm;
+use outiserver\economycore\Database\Player\PlayerDataManager;
+use outiserver\mail\Database\Mail\MailDataManager;
+use outiserver\mail\Forms\CreateMailForm;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
