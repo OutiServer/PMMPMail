@@ -6,6 +6,7 @@ namespace outiserver\mail;
 
 use outiserver\economycore\EconomyCore;
 use Ken_Cir\LibFormAPI\FormStack\StackFormManager;
+use outiserver\economycore\Language\LanguageManager;
 use outiserver\mail\Commands\MailCommand;
 use outiserver\mail\Database\Mail\MailDataManager;
 use outiserver\mail\Handlers\EventHandler;
@@ -30,6 +31,8 @@ class Mail extends PluginBase
     private MailDataManager $mailDataManager;
 
     private StackFormManager $stackFormManager;
+
+    private LanguageManager $languageManager;
 
     private Config $config;
 
@@ -76,6 +79,7 @@ class Mail extends PluginBase
         $this->mailDataManager = new MailDataManager($this->dataConnector);
 
         $this->stackFormManager = new StackFormManager();
+        $this->languageManager = new LanguageManager("{$this->getFile()}resources/lang");
 
         $this->getServer()->getCommandMap()->registerAll($this->getName(), [
             new MailCommand($this, "mail", "メールコマンド", [])
@@ -118,5 +122,13 @@ class Mail extends PluginBase
     public function getConfig(): Config
     {
         return $this->config;
+    }
+
+    /**
+     * @return LanguageManager
+     */
+    public function getLanguageManager(): LanguageManager
+    {
+        return $this->languageManager;
     }
 }
