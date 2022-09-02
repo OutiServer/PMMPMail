@@ -6,10 +6,10 @@ namespace outiserver\mail;
 
 use outiserver\economycore\EconomyCore;
 use Ken_Cir\LibFormAPI\FormStack\StackFormManager;
-use outiserver\economycore\Language\LanguageManager;
 use outiserver\mail\Commands\MailCommand;
 use outiserver\mail\Database\Mail\MailDataManager;
 use outiserver\mail\Handlers\EventHandler;
+use outiserver\mail\Language\LanguageManager;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
@@ -82,7 +82,7 @@ class Mail extends PluginBase
         $this->languageManager = new LanguageManager("{$this->getFile()}resources/lang");
 
         $this->getServer()->getCommandMap()->registerAll($this->getName(), [
-            new MailCommand($this, "mail", "メールコマンド", [])
+            new MailCommand($this, "mail", "メールコマンド", "/mail", [])
         ]);
         $this->getServer()->getPluginManager()->registerEvents(new EventHandler($this), $this);
     }

@@ -4,30 +4,38 @@ declare(strict_types=1);
 
 namespace outiserver\mail\Commands;
 
-use CortexPE\Commando\BaseCommand;
-use outiserver\mail\Commands\SubCommands\CreateSubCommand;
-use outiserver\mail\Commands\SubCommands\FormSubCommand;
-use outiserver\mail\Commands\SubCommands\ViewSubCommand;
+use outiserver\mail\Forms\MailForm;
+use outiserver\mail\Mail;
+use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\utils\TextFormat;
+use pocketmine\lang\Translatable;
+use pocketmine\player\Player;
+use pocketmine\plugin\Plugin;
+use pocketmine\plugin\PluginOwned;
 
-class MailCommand extends BaseCommand
+class MailCommand extends Command implements PluginOwned
 {
-    protected function prepare(): void
+    private Plugin $plugin;
+
+    public function __construct(Plugin $plugin, string $name, Translatable|string $description = "", Translatable|string|null $usageMessage = null, array $aliases = [])
     {
-        $this->setPermission("mail.command");
-        $this->registerSubCommand(new CreateSubCommand("create", "メールを新規作成する", []));
-        $this->registerSubCommand(new FormSubCommand("form", "メール用のFormを開く", []));
-        $this->registerSubCommand(new ViewSubCommand("view", "メール閲覧Formを開く", []));
+        parent::__construct($name, $description, $usageMessage, $aliases);
+
+        $this->plugin = $plugin;
     }
 
-    public function onRun(CommandSender $sender, string $aliasUsed, array $args): void
+    public function execute(CommandSender $sender, string $commandLabel, array $args)
     {
-        $sender->sendMessage(TextFormat::GREEN . "[Mail] 使用可能なコマンド一覧");
-        foreach ($this->getSubCommands() as $subCommand) {
-            if ($subCommand->testPermissionSilent($sender)) {
-                $sender->sendMessage($subCommand->getUsageMessage());
-            }
+        if (!$sender instanceof Player) {
+            $sender->sendMessage(Mail::getInstance()->getLanguageManager()->getLanguage($sender->getLanguage()->getLang())->translateString("command.error.please_used_server"));
+            return;
         }
+
+        (new MailForm())->execute($sender);
+    }
+
+    public function getOwningPlugin(): Plugin
+    {
+        return $this->plugin;
     }
 }

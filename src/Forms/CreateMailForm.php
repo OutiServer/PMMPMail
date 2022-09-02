@@ -9,19 +9,18 @@ use Ken_Cir\LibFormAPI\Utils\FormUtil;
 use outiserver\economycore\Database\Player\PlayerData;
 use outiserver\economycore\Database\Player\PlayerDataManager;
 use outiserver\economycore\Forms\Base\BaseForm;
-use outiserver\economycore\Language\LanguageManager;
 use Ken_Cir\LibFormAPI\FormContents\CustomForm\ContentInput;
 use Ken_Cir\LibFormAPI\FormContents\CustomForm\ContentToggle;
 use Ken_Cir\LibFormAPI\Forms\CustomForm;
 use outiserver\mail\Database\Mail\MailDataManager;
+use outiserver\mail\Language\LanguageManager;
 use outiserver\mail\Mail;
 use pocketmine\player\Player;
 use pocketmine\Server;
-use pocketmine\utils\TextFormat;
 
 class CreateMailForm implements BaseForm
 {
-    public const FORM_KEY = "";
+    public const FORM_KEY = "create_mail";
 
     public function execute(Player $player): void
     {
@@ -41,13 +40,6 @@ class CreateMailForm implements BaseForm
             LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.create_mail.title"),
         $formContent,
         function (Player $player, array $data): void {
-            if (!$data[0] and !$data[1] and !$data[2]) {
-                $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.create_mail.error1"));
-                $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.back"));
-                FormUtil::backForm(Mail::getInstance(), [Mail::getInstance()->getStackFormManager()->getStackFormEnd($player->getXuid()), "reSend"], [$player], 3);
-                return;
-            }
-
             $time = new DateTime('now');
             // 全員に送信
             if ($data[4]) {
@@ -62,6 +54,10 @@ class CreateMailForm implements BaseForm
                 }
 
                 $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.create_mail.success2", [(string)$success]));
+                $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.back"));
+
+                Mail::getInstance()->getStackFormManager()->deleteStackForm($player->getXuid(), self::FORM_KEY);
+                FormUtil::backForm(Mail::getInstance(), [$this, "execute"], [$player], 3);
             }
             // 通常送信
             else {
@@ -69,14 +65,18 @@ class CreateMailForm implements BaseForm
                 if (!$sendToPlayerData) {
                     (new PlayerSelectorForm())->execute($player,
                     $data[2],
-                    function (Player $player, PlayerData $playerData) use ($sendToPlayerData, $data): void {
+                    function (Player $player, PlayerData $playerData) use ($data): void {
                         $time = new DateTime('now');
                         MailDataManager::getInstance()->create($data[0],
                             $data[1],
                             $playerData->getXuid(),
                             $data[3] ? "運営" : $player->getXuid(),
                             $time->getTimestamp());
-                        $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.create_mail.success1", [$sendToPlayerData->getName()]));
+                        $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.create_mail.success1", [$playerData->getName()]));
+                        $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.back"));
+
+                        Mail::getInstance()->getStackFormManager()->deleteStackForm($player->getXuid(), self::FORM_KEY);
+                        FormUtil::backForm(Mail::getInstance(), [$this, "execute"], [$player], 3);
                     });
                     return;
                 }
@@ -86,14 +86,18 @@ class CreateMailForm implements BaseForm
                     $sendToPlayerData->getXuid(),
                     $data[3] ? "運営" : $player->getXuid(),
                     $time->getTimestamp());
-                $player->sendMessage(TextFormat::GREEN . "{$sendToPlayerData->getName()}にメールを送信しました");
+                $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.create_mail.success1", [$sendToPlayerData->getName()]));
+                $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.back"));
+
+                Mail::getInstance()->getStackFormManager()->deleteStackForm($player->getXuid(), self::FORM_KEY);
+                FormUtil::backForm(Mail::getInstance(), [$this, "execute"], [$player], 3);
             }
         },
         function (Player $player): void {
-            Mail::getInstance()->getStackFormManager()->deleteStackForm($player->getXuid(), "create_form");
-            Mail::getInstance()->getStackFormManager()->getStackFormEnd($player->getXuid())?->reSend();
+            Mail::getInstance()->getStackFormManager()->deleteStackForm($player->getXuid(), self::FORM_KEY);
+            Mail::getInstance()->getStackFormManager()->getStackFormEnd($player->getXuid())->reSend();
         });
 
-        Mail::getInstance()->getStackFormManager()->addStackForm($player->getXuid(), "create_mail", $form);
+        Mail::getInstance()->getStackFormManager()->addStackForm($player->getXuid(), self::FORM_KEY, $form);
     }
 }

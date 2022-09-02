@@ -7,11 +7,14 @@ namespace outiserver\mail\Forms;
 use outiserver\economycore\Forms\Base\BaseForm;
 use Ken_Cir\LibFormAPI\FormContents\SimpleForm\SimpleFormButton;
 use Ken_Cir\LibFormAPI\Forms\SimpleForm;
+use outiserver\mail\Language\LanguageManager;
 use outiserver\mail\Mail;
 use pocketmine\player\Player;
 
 class MailForm implements BaseForm
 {
+    public const FORM_KEY = "mail";
+
     public function execute(Player $player): void
     {
         $form = new SimpleForm(Mail::getInstance(),
@@ -19,8 +22,8 @@ class MailForm implements BaseForm
         "[Mail] メール",
         "",
         [
-            new SimpleFormButton("メールを作成"),
-            new SimpleFormButton("メールを閲覧")
+            new SimpleFormButton(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.mail.button1")),
+            new SimpleFormButton(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.mail.button2"))
         ],
         function (Player $player, int $data): void {
             switch ($data) {
@@ -38,6 +41,6 @@ class MailForm implements BaseForm
             Mail::getInstance()->getStackFormManager()->deleteStack($player->getXuid());
         });
 
-        Mail::getInstance()->getStackFormManager()->addStackForm($player->getXuid(), "mail", $form);
+        Mail::getInstance()->getStackFormManager()->addStackForm($player->getXuid(), self::FORM_KEY, $form);
     }
 }

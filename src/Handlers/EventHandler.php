@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace outiserver\mail\Handlers;
 
-use outiserver\economycore\Language\LanguageManager;
 use outiserver\mail\Database\Mail\MailDataManager;
+use outiserver\mail\Language\LanguageManager;
 use outiserver\mail\Mail;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
