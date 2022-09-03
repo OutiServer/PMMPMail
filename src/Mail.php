@@ -72,7 +72,8 @@ class Mail extends PluginBase
         $this->config = new Config("{$this->getDataFolder()}config.yml", Config::YAML);
 
         $this->dataConnector = libasynql::create($this, (new Config("{$this->getDataFolder()}database.yml", Config::YAML))->get("database"), [
-            "sqlite" => "sqlite.sql"
+            "sqlite" => "sql/sqlite.sql",
+            "mysql" => "sql/mysql.sql",
         ]);
         $this->dataConnector->executeGeneric("economy.mail.mails.init");
         $this->dataConnector->waitAll();

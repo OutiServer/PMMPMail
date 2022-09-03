@@ -10,6 +10,7 @@ use Ken_Cir\LibFormAPI\Forms\SimpleForm;
 use outiserver\mail\Language\LanguageManager;
 use outiserver\mail\Mail;
 use pocketmine\player\Player;
+use pocketmine\Server;
 
 class MailForm implements BaseForm
 {
@@ -17,14 +18,19 @@ class MailForm implements BaseForm
 
     public function execute(Player $player): void
     {
+        $contents = [
+            new SimpleFormButton(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.mail.button1")),
+            new SimpleFormButton(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.mail.button2"))
+        ];
+
+        if (Server::getInstance()->isOp($player->getName())) {
+            $contents[] = new SimpleFormButton(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.mail.button3"));
+        }
         $form = new SimpleForm(Mail::getInstance(),
             $player,
         "[Mail] メール",
         "",
-        [
-            new SimpleFormButton(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.mail.button1")),
-            new SimpleFormButton(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.mail.button2"))
-        ],
+        $contents,
         function (Player $player, int $data): void {
             switch ($data) {
                 case 0:
@@ -32,6 +38,9 @@ class MailForm implements BaseForm
                     break;
                 case 1:
                     (new ViewMailForm())->execute($player);
+                    break;
+                case 2:
+                    (new MailManagerForm())->execute($player);
                     break;
                 default:
                     break;

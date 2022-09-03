@@ -1,4 +1,4 @@
--- #! sqlite
+-- #! mysql
 
 -- # { economy
 -- # { mail
@@ -6,13 +6,13 @@
 -- # { init
 CREATE TABLE IF NOT EXISTS mails
 (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
     title       TEXT    NOT NULL,
     content     TEXT    NOT NULL,
     send_xuid   TEXT    NOT NULL,
     author_xuid TEXT    NOT NULL,
     send_time   INTEGER NOT NULL,
-    read        INTEGER NOT NULL DEFAULT 0
+    readed        INTEGER NOT NULL DEFAULT 0
 );
 -- # }
 
@@ -37,7 +37,7 @@ SELECT * FROM mails;
 -- # { update
 -- #    :read int
 -- #    :id int
-UPDATE mails SET read = :read WHERE id = :id;
+UPDATE mails SET readed = :read WHERE id = :id;
 -- # }
 
 -- # { delete

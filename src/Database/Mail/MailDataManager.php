@@ -23,7 +23,7 @@ class MailDataManager extends BaseDataManager
             [],
             function (array $row) {
                 foreach ($row as $data) {
-                    $this->data[$data["id"]] = new MailData($this->dataConnector, $data["id"], $data["title"], $data["content"], $data["send_xuid"], $data["author_xuid"], $data["send_time"], $data["read"]);
+                    $this->data[$data["id"]] = new MailData($this->dataConnector, $data["id"], $data["title"], $data["content"], $data["send_xuid"], $data["author_xuid"], $data["send_time"], $data["readed"]);
                 }
             });
         $this->dataConnector->executeSelect("economy.mail.mails.seq",
