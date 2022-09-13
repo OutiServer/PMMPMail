@@ -5,6 +5,9 @@ api: 4.0.0
 main: outiserver\mail\Mail
 src-namespace-prefix: outiserver\mail
 
+loadbefore:
+  - EconomyCore
+
 permissions:
   mail.command:
     description: Mail Command Permission
