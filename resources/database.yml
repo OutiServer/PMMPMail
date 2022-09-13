@@ -6,4 +6,9 @@ database:
   type: sqlite
   sqlite:
     file: mail.db
+  mysql:
+    host: 127.0.0.1
+    username: root
+    password: ""
+    schema: your_schema
   worker-limit: 1
