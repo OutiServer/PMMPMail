@@ -80,7 +80,9 @@ class Mail extends PluginBase
         ]);
         $this->dataConnector->executeGeneric("economy.mail.mails.init");
         $this->dataConnector->waitAll();
+
         $this->mailDataManager = new MailDataManager($this->dataConnector);
+        $this->dataConnector->waitAll();
 
         $this->stackFormManager = new StackFormManager();
         $this->languageManager = new LanguageManager("{$this->getFile()}resources/lang");
