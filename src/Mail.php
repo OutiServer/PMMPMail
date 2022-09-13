@@ -15,6 +15,7 @@ use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
 use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql;
+use poggit\libasynql\SqlError;
 
 class Mail extends PluginBase
 {
@@ -78,7 +79,12 @@ class Mail extends PluginBase
             "sqlite" => "sql/sqlite.sql",
             "mysql" => "sql/mysql.sql",
         ]);
-        $this->dataConnector->executeGeneric("economy.mail.mails.init");
+        $this->dataConnector->executeGeneric("economy.mail.mails.init",
+        [],
+        null,
+            function (SqlError $error) {
+                Mail::getInstance()->getLogger()->error("[SqlError] {$error->getErrorMessage()}");
+            });
         $this->dataConnector->waitAll();
 
         $this->mailDataManager = new MailDataManager($this->dataConnector);

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace outiserver\mail\Database\Mail;
 
 use outiserver\economycore\Database\Base\BaseData;
+use outiserver\mail\Mail;
 use poggit\libasynql\DataConnector;
+use poggit\libasynql\SqlError;
 
 class MailData extends BaseData
 {
@@ -42,7 +44,11 @@ class MailData extends BaseData
             [
                 "read" => $this->read,
                 "id" => $this->id
-            ]);
+            ],
+            null,
+            function (SqlError $error) {
+                Mail::getInstance()->getLogger()->error("[SqlError] {$error->getErrorMessage()}");
+            });
     }
 
     /**
