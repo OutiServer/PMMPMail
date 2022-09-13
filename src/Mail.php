@@ -36,6 +36,8 @@ class Mail extends PluginBase
 
     private Config $config;
 
+    private mixed $databaseConfig;
+
     protected function onLoad(): void
     {
         self::setInstance($this);
@@ -70,8 +72,9 @@ class Mail extends PluginBase
         $this->saveResource("database.yml");
         $this->saveResource("config.yml");
         $this->config = new Config("{$this->getDataFolder()}config.yml", Config::YAML);
+        $this->databaseConfig = (new Config("{$this->getDataFolder()}database.yml", Config::YAML))->get("database");
 
-        $this->dataConnector = libasynql::create($this, (new Config("{$this->getDataFolder()}database.yml", Config::YAML))->get("database"), [
+        $this->dataConnector = libasynql::create($this, $this->databaseConfig, [
             "sqlite" => "sql/sqlite.sql",
             "mysql" => "sql/mysql.sql",
         ]);
@@ -94,6 +97,14 @@ class Mail extends PluginBase
             $this->dataConnector->waitAll();
             $this->dataConnector->close();
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabaseConfig(): mixed
+    {
+        return $this->databaseConfig;
     }
 
     /**
