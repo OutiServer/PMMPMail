@@ -28,8 +28,7 @@ class PlayerSelectorForm
                 [Mail::getInstance()->getStackFormManager()->getStackFormEnd($player->getXuid()), "reSend"],
                 [],
                 3);
-        }
-        else {
+        } else {
             $formContent = [];
             foreach ($result as $playerData) {
                 $formContent[] = new SimpleFormButton($playerData->getName());

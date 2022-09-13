@@ -88,24 +88,24 @@ class MailManagerForm implements BaseForm
     private function editMail(Player $player, PlayerData $selectPlayerData, MailData $mailData): void
     {
         (new CustomForm(Mail::getInstance(),
-        $player,
-        LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.mail_manager.edit_mail.title", [$mailData->getId()]),
-        [
-            new ContentInput(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.create_mail.button1"), "mailTitle", $mailData->getTitle()),
-            new ContentInput(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.create_mail.button2"), "mailContent", $mailData->getContent()),
-            new ContentToggle(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.mail_manager.edit_mail.button3"), (bool)$mailData->getRead()),
-        ],
-        function (Player $player, array $data) use ($selectPlayerData, $mailData) {
-            $mailData->setTitle($data[0]);
-            $mailData->setContent($data[1]);
-            $mailData->setRead((int)$data[2]);
+            $player,
+            LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.mail_manager.edit_mail.title", [$mailData->getId()]),
+            [
+                new ContentInput(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.create_mail.button1"), "mailTitle", $mailData->getTitle()),
+                new ContentInput(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.create_mail.button2"), "mailContent", $mailData->getContent()),
+                new ContentToggle(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.mail_manager.edit_mail.button3"), (bool)$mailData->getRead()),
+            ],
+            function (Player $player, array $data) use ($selectPlayerData, $mailData) {
+                $mailData->setTitle($data[0]);
+                $mailData->setContent($data[1]);
+                $mailData->setRead((int)$data[2]);
 
-            $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.mail_manager.edit_mail.success"));
-            $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.back"));
-            FormUtil::backForm(Mail::getInstance(), [$this, "viewPlayer"], [$player, $selectPlayerData], 3);
-        },
-        function (Player $player) use ($selectPlayerData) {
-            $this->viewPlayer($player, $selectPlayerData);
-        }));
+                $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.mail_manager.edit_mail.success"));
+                $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.back"));
+                FormUtil::backForm(Mail::getInstance(), [$this, "viewPlayer"], [$player, $selectPlayerData], 3);
+            },
+            function (Player $player) use ($selectPlayerData) {
+                $this->viewPlayer($player, $selectPlayerData);
+            }));
     }
 }

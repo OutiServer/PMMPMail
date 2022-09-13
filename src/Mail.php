@@ -80,8 +80,8 @@ class Mail extends PluginBase
             "mysql" => "sql/mysql.sql",
         ]);
         $this->dataConnector->executeGeneric("economy.mail.mails.init",
-        [],
-        null,
+            [],
+            null,
             function (SqlError $error) {
                 Mail::getInstance()->getLogger()->error("[SqlError] {$error->getErrorMessage()}");
             });

@@ -41,8 +41,7 @@ class MailDataManager extends BaseDataManager
                 foreach ($row as $data) {
                     if (Mail::getInstance()->getDatabaseConfig()["type"] === "sqlite" or Mail::getInstance()->getDatabaseConfig()["type"] === "sqlite3" or Mail::getInstance()->getDatabaseConfig()["type"] === "sq3") {
                         $this->seq = $data["seq"];
-                    }
-                    elseif (Mail::getInstance()->getDatabaseConfig()["type"] === "mysql" or Mail::getInstance()->getDatabaseConfig()["type"] === "mysqli") {
+                    } elseif (Mail::getInstance()->getDatabaseConfig()["type"] === "mysql" or Mail::getInstance()->getDatabaseConfig()["type"] === "mysqli") {
                         $this->seq = $data["Auto_increment"];
                     }
                 }
@@ -76,14 +75,14 @@ class MailDataManager extends BaseDataManager
     public function create(string $title, string $content, string $sendXuid, string $authorXuid, int $sendTime): MailData
     {
         $this->dataConnector->executeInsert("economy.mail.mails.create",
-        [
-            "title" => $title,
-            "content" => $content,
-            "send_xuid" => $sendXuid,
-            "author_xuid" => $authorXuid,
-            "send_time" => $sendTime
-        ],
-        null,
+            [
+                "title" => $title,
+                "content" => $content,
+                "send_xuid" => $sendXuid,
+                "author_xuid" => $authorXuid,
+                "send_time" => $sendTime
+            ],
+            null,
             function (SqlError $error) {
                 Mail::getInstance()->getLogger()->error("[SqlError] {$error->getErrorMessage()}");
             });
@@ -96,10 +95,10 @@ class MailDataManager extends BaseDataManager
         if (!$this->get($id)) return;
 
         $this->dataConnector->executeGeneric("economy.mail.mails.delete",
-        [
-            "id" => $id
-        ],
-        null,
+            [
+                "id" => $id
+            ],
+            null,
             function (SqlError $error) {
                 Mail::getInstance()->getLogger()->error("[SqlError] {$error->getErrorMessage()}");
             });

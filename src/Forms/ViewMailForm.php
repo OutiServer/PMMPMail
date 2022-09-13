@@ -26,8 +26,7 @@ class ViewMailForm implements BaseForm
         foreach (MailDataManager::getInstance()->getPlayerXuid($player->getXuid(), true) as $mailData) {
             if ($mailData->getRead() === 1) {
                 $formContents[] = new SimpleFormButton(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.view_mail.button1", [date("Y年m月d日 H時i分s秒", $mailData->getSendTime()), $mailData->getTitle()]));
-            }
-            else {
+            } else {
                 $formContents[] = new SimpleFormButton(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.view_mail.button2", [date("Y年m月d日 H時i分s秒", $mailData->getSendTime()), $mailData->getTitle()]));
             }
         }
@@ -37,13 +36,13 @@ class ViewMailForm implements BaseForm
             LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.view_mail.title"),
             LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.view_mail.content"),
             $formContents,
-        function (Player $player, int $data): void {
-            $this->view($player, MailDataManager::getInstance()->getPlayerXuid($player->getXuid(), true)[$data]);
-        },
-        function (Player $player): void {
-            Mail::getInstance()->getStackFormManager()->deleteStackForm($player->getXuid(), self::FORM_KEY);
-            Mail::getInstance()->getStackFormManager()->getStackFormEnd($player->getXuid())?->reSend();
-        });
+            function (Player $player, int $data): void {
+                $this->view($player, MailDataManager::getInstance()->getPlayerXuid($player->getXuid(), true)[$data]);
+            },
+            function (Player $player): void {
+                Mail::getInstance()->getStackFormManager()->deleteStackForm($player->getXuid(), self::FORM_KEY);
+                Mail::getInstance()->getStackFormManager()->getStackFormEnd($player->getXuid())?->reSend();
+            });
 
         Mail::getInstance()->getStackFormManager()->addStackForm($player->getXuid(), self::FORM_KEY, $form);
     }
@@ -57,18 +56,17 @@ class ViewMailForm implements BaseForm
             LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.view_mail.view.button1"),
             LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.view_mail.view.button2"),
             function (Player $player, bool $data) use ($mailData): void {
-            if ($data) {
-                MailDataManager::getInstance()->delete($mailData->getId());
-                $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.view_mail.view.delete_success"));
-                $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.back"));
+                if ($data) {
+                    MailDataManager::getInstance()->delete($mailData->getId());
+                    $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.view_mail.view.delete_success"));
+                    $player->sendMessage(LanguageManager::getInstance()->getLanguage($player->getLocale())->translateString("form.back"));
 
-                Mail::getInstance()->getStackFormManager()->deleteStackForm($player->getXuid(), self::FORM_KEY);
-                FormUtil::backForm(Mail::getInstance(), [$this, "execute"], [$player], 3);
-            }
-            else {
-                $mailData->setRead(1);
-                Mail::getInstance()->getStackFormManager()->getStackFormEnd($player->getXuid())->reSend();
-            }
-        });
+                    Mail::getInstance()->getStackFormManager()->deleteStackForm($player->getXuid(), self::FORM_KEY);
+                    FormUtil::backForm(Mail::getInstance(), [$this, "execute"], [$player], 3);
+                } else {
+                    $mailData->setRead(1);
+                    Mail::getInstance()->getStackFormManager()->getStackFormEnd($player->getXuid())->reSend();
+                }
+            });
     }
 }
