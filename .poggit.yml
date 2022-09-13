@@ -7,7 +7,7 @@ projects:
     path: ""
     libs:
       - src: poggit/libasynql/libasynql
-        version: ^4.1.1
+        version: 4.1.0
       - src: KenCir/FormAPI/libFormAPI
-        version: ^1.0.0
+        version: 1.1.0
 ...
