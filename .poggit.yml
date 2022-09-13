@@ -9,7 +9,7 @@ projects:
       phpstan: false
     libs:
       - src: poggit/libasynql/libasynql
-        version: ^4.0.1
+        version: ^4.1.1
       - src: KenCir/FormAPI/libFormAPI
         version: ^2.1.0
 ...
