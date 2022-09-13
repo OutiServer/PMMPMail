@@ -42,7 +42,7 @@ class MailDataManager extends BaseDataManager
                     if (Mail::getInstance()->getDatabaseConfig()["type"] === "sqlite" or Mail::getInstance()->getDatabaseConfig()["type"] === "sqlite3" or Mail::getInstance()->getDatabaseConfig()["type"] === "sq3") {
                         $this->seq = $data["seq"];
                     } elseif (Mail::getInstance()->getDatabaseConfig()["type"] === "mysql" or Mail::getInstance()->getDatabaseConfig()["type"] === "mysqli") {
-                        $this->seq = $data["Auto_increment"];
+                        $this->seq = $data["Auto_increment"] ?? 0;
                     }
                 }
             },
