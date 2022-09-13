@@ -5,8 +5,6 @@ branches:
 projects:
   Mail:
     path: ""
-    lint:
-      phpstan: false
     libs:
       - src: poggit/libasynql/libasynql
         version: ^4.1.1
