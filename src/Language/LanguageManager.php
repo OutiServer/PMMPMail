@@ -18,7 +18,7 @@ class LanguageManager
         self::setInstance($this);
 
         $langList = Language::getLanguageList($path);
-        foreach($langList as $lang){
+        foreach ($langList as $lang) {
             $this->languages[$lang] = new Language($lang, $path, $lang);
         }
     }

@@ -28,27 +28,27 @@ class MailForm implements BaseForm
         }
         $form = new SimpleForm(Mail::getInstance(),
             $player,
-        "[Mail] メール",
-        "",
-        $contents,
-        function (Player $player, int $data): void {
-            switch ($data) {
-                case 0:
-                    (new CreateMailForm())->execute($player);
-                    break;
-                case 1:
-                    (new ViewMailForm())->execute($player);
-                    break;
-                case 2:
-                    (new MailManagerForm())->execute($player);
-                    break;
-                default:
-                    break;
-            }
-        },
-        function (Player $player): void {
-            Mail::getInstance()->getStackFormManager()->deleteStack($player->getXuid());
-        });
+            "[Mail] メール",
+            "",
+            $contents,
+            function (Player $player, int $data): void {
+                switch ($data) {
+                    case 0:
+                        (new CreateMailForm())->execute($player);
+                        break;
+                    case 1:
+                        (new ViewMailForm())->execute($player);
+                        break;
+                    case 2:
+                        (new MailManagerForm())->execute($player);
+                        break;
+                    default:
+                        break;
+                }
+            },
+            function (Player $player): void {
+                Mail::getInstance()->getStackFormManager()->deleteStack($player->getXuid());
+            });
 
         Mail::getInstance()->getStackFormManager()->addStackForm($player->getXuid(), self::FORM_KEY, $form);
     }

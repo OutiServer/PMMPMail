@@ -27,7 +27,7 @@ VALUES (:title, :content, :send_xuid, :author_xuid, :send_time);
 -- # }
 
 -- # { seq
-SELECT seq FROM sqlite_sequence WHERE name = 'mails';
+SHOW TABLE STATUS WHERE name = "mails";
 -- # }
 
 -- # { load

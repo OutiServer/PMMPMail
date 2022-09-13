@@ -5,11 +5,9 @@ branches:
 projects:
   Mail:
     path: ""
-    lint:
-      phpstan: false
     libs:
       - src: poggit/libasynql/libasynql
-        version: ^4.0.1
-      - src: KenCir/FormAPI/libFormAPI
-        version: ^2.1.0
+        version: 4.1.0
+      - src: KenCir/PMMPLibFormAPI/LibFormAPI
+        version: 1.1.0
 ...

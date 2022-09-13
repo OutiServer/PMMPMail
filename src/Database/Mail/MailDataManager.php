@@ -6,8 +6,10 @@ namespace outiserver\mail\Database\Mail;
 
 use outiserver\economycore\Database\Base\BaseAutoincrement;
 use outiserver\economycore\Database\Base\BaseDataManager;
+use outiserver\mail\Mail;
 use pocketmine\utils\SingletonTrait;
 use poggit\libasynql\DataConnector;
+use poggit\libasynql\SqlError;
 
 class MailDataManager extends BaseDataManager
 {
@@ -25,6 +27,9 @@ class MailDataManager extends BaseDataManager
                 foreach ($row as $data) {
                     $this->data[$data["id"]] = new MailData($this->dataConnector, $data["id"], $data["title"], $data["content"], $data["send_xuid"], $data["author_xuid"], $data["send_time"], $data["readed"]);
                 }
+            },
+            function (SqlError $error) {
+                Mail::getInstance()->getLogger()->error("[SqlError] {$error->getErrorMessage()}");
             });
         $this->dataConnector->executeSelect("economy.mail.mails.seq",
             [],
@@ -34,8 +39,15 @@ class MailDataManager extends BaseDataManager
                     return;
                 }
                 foreach ($row as $data) {
-                    $this->seq = $data["seq"];
+                    if (Mail::getInstance()->getDatabaseConfig()["type"] === "sqlite" or Mail::getInstance()->getDatabaseConfig()["type"] === "sqlite3" or Mail::getInstance()->getDatabaseConfig()["type"] === "sq3") {
+                        $this->seq = $data["seq"];
+                    } elseif (Mail::getInstance()->getDatabaseConfig()["type"] === "mysql" or Mail::getInstance()->getDatabaseConfig()["type"] === "mysqli") {
+                        $this->seq = $data["Auto_increment"];
+                    }
                 }
+            },
+            function (SqlError $error) {
+                Mail::getInstance()->getLogger()->error("[SqlError] {$error->getErrorMessage()}");
             });
     }
 
@@ -63,13 +75,17 @@ class MailDataManager extends BaseDataManager
     public function create(string $title, string $content, string $sendXuid, string $authorXuid, int $sendTime): MailData
     {
         $this->dataConnector->executeInsert("economy.mail.mails.create",
-        [
-            "title" => $title,
-            "content" => $content,
-            "send_xuid" => $sendXuid,
-            "author_xuid" => $authorXuid,
-            "send_time" => $sendTime
-        ]);
+            [
+                "title" => $title,
+                "content" => $content,
+                "send_xuid" => $sendXuid,
+                "author_xuid" => $authorXuid,
+                "send_time" => $sendTime
+            ],
+            null,
+            function (SqlError $error) {
+                Mail::getInstance()->getLogger()->error("[SqlError] {$error->getErrorMessage()}");
+            });
 
         return ($this->data[++$this->seq] = new MailData($this->dataConnector, $this->seq, $title, $content, $sendXuid, $authorXuid, $sendTime, 0));
     }
@@ -79,9 +95,13 @@ class MailDataManager extends BaseDataManager
         if (!$this->get($id)) return;
 
         $this->dataConnector->executeGeneric("economy.mail.mails.delete",
-        [
-            "id" => $id
-        ]);
+            [
+                "id" => $id
+            ],
+            null,
+            function (SqlError $error) {
+                Mail::getInstance()->getLogger()->error("[SqlError] {$error->getErrorMessage()}");
+            });
         unset($this->data[$id]);
     }
 

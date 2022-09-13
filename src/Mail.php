@@ -15,6 +15,7 @@ use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
 use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql;
+use poggit\libasynql\SqlError;
 
 class Mail extends PluginBase
 {
@@ -35,6 +36,8 @@ class Mail extends PluginBase
     private LanguageManager $languageManager;
 
     private Config $config;
+
+    private mixed $databaseConfig;
 
     protected function onLoad(): void
     {
@@ -70,14 +73,22 @@ class Mail extends PluginBase
         $this->saveResource("database.yml");
         $this->saveResource("config.yml");
         $this->config = new Config("{$this->getDataFolder()}config.yml", Config::YAML);
+        $this->databaseConfig = (new Config("{$this->getDataFolder()}database.yml", Config::YAML))->get("database");
 
-        $this->dataConnector = libasynql::create($this, (new Config("{$this->getDataFolder()}database.yml", Config::YAML))->get("database"), [
+        $this->dataConnector = libasynql::create($this, $this->databaseConfig, [
             "sqlite" => "sql/sqlite.sql",
             "mysql" => "sql/mysql.sql",
         ]);
-        $this->dataConnector->executeGeneric("economy.mail.mails.init");
+        $this->dataConnector->executeGeneric("economy.mail.mails.init",
+            [],
+            null,
+            function (SqlError $error) {
+                Mail::getInstance()->getLogger()->error("[SqlError] {$error->getErrorMessage()}");
+            });
         $this->dataConnector->waitAll();
+
         $this->mailDataManager = new MailDataManager($this->dataConnector);
+        $this->dataConnector->waitAll();
 
         $this->stackFormManager = new StackFormManager();
         $this->languageManager = new LanguageManager("{$this->getFile()}resources/lang");
@@ -94,6 +105,14 @@ class Mail extends PluginBase
             $this->dataConnector->waitAll();
             $this->dataConnector->close();
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDatabaseConfig(): mixed
+    {
+        return $this->databaseConfig;
     }
 
     /**

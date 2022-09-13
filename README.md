@@ -1,0 +1,3 @@
+# PMMPMail
+
+PMMPのメールプラグイン
